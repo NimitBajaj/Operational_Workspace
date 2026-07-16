@@ -200,6 +200,9 @@ model Customer {
   // Audit Fields
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([name])
+  @@index([type])
 }
 
 model Task {
@@ -262,6 +265,12 @@ model Project {
   createdAt       DateTime         @default(now())
   updatedAt       DateTime         @updatedAt
   projectContacts ProjectContact[]
+
+  @@index([customerId])
+  @@index([status])
+  @@index([priority])
+  @@index([createdAt])
+  @@index([expectedCompletionDate])
 }
 
 model Contact {
@@ -292,6 +301,9 @@ model Contact {
   createdAt       DateTime         @default(now())
   updatedAt       DateTime         @updatedAt
   projectContacts ProjectContact[]
+
+  @@index([customerId])
+  @@index([role])
 }
 
 model ProjectContact {
@@ -322,6 +334,11 @@ model Product {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([name])
+  @@index([category])
+  @@index([brand])
+  @@index([active])
 }
 
 model ProductVariant {
@@ -367,6 +384,9 @@ model ProductVariant {
   // Audit
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([productId])
+  @@index([active])
 }
 
 model Quotation {
