@@ -180,8 +180,8 @@ model Customer {
   // Basic Information
   name      String
   type      CustomerType
-  email     String
-  phone     String
+  email     String @unique
+  phone     String @unique
   gstNumber String?
 
   // Address
