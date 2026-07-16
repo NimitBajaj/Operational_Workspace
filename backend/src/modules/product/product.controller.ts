@@ -1,5 +1,6 @@
 import {Request, Response, NextFunction} from 'express';
 import { ProductService } from './product.service';
+import { successResponse } from '../../utils/response';
 
 export class ProductController {
     constructor(
@@ -9,10 +10,10 @@ export class ProductController {
     async create(req: Request, res: Response){
         const product = await this.productService.create(req.body);
 
-        res.status(201).json({
-            success: true,
-            message: "Product created successfully",
-            data: product,
-        });
+       return successResponse
+       (res, 
+        product, 
+        "Product created successfully", 
+        201);
     }
 }
