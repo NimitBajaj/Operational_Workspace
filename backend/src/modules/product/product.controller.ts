@@ -6,21 +6,13 @@ export class ProductController {
         private readonly productService: ProductService
     ){} 
 
-    async create(
-        req: Request,
-        res: Response,
-        next: NextFunction
-    ) { 
-        try {
-            const product = await this.productService.create(req.body);
+    async create(req: Request, res: Response){
+        const product = await this.productService.create(req.body);
 
-            return res.status(201).json({
-                success: true,
-                message: "Product created successfully",
-                data: product
-            });
-        } catch (error) {
-            next(error);
-        }
+        res.status(201).json({
+            success: true,
+            message: "Product created successfully",
+            data: product,
+        });
     }
 }
