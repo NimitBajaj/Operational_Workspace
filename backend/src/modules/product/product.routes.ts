@@ -5,12 +5,9 @@ import {ProductRepository} from './product.repository';
 import { CreateProductSchema } from './product.schema';
 import { validate } from '../../middleware/validation.middleware';
 import { asyncHandler } from '../../utils/async-handler';
+import { productController } from '.';
 
 const router = Router();
-
-const productRepository = new ProductRepository();
-const productService = new ProductService(productRepository);
-const productController = new ProductController(productService);
 
 router.post("/", 
     validate(CreateProductSchema),

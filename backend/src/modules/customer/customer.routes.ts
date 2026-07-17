@@ -7,11 +7,8 @@ import { validate } from "../../middleware/validation.middleware";
 import { asyncHandler } from "../../utils/async-handler";
 import {createCustomerSchema, updateCustomerSchema} from "./customer.schema"
 import { runInNewContext } from "vm";
+import { customerController } from ".";
 
-const prisma = new PrismaClient();
-const customerRepository = new CustomerRepository(prisma);
-const customerService = new CustomerService(customerRepository);
-const customerController = new CustomerController(customerService);
 const router = Router();
 
 router.post(

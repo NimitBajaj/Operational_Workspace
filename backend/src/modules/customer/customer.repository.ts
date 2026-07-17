@@ -24,7 +24,12 @@ export class CustomerRepository {
     }
 
     async findAll() {
-        return this.prisma.customer.findMany();
+        return this.prisma.customer.findMany({
+            orderBy: {
+                createdAt: "desc",
+            },
+
+    });
     }
 
     async update(id: string, data: Prisma.CustomerUpdateInput) {
