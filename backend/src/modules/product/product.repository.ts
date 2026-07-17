@@ -1,7 +1,11 @@
 import {prisma} from "../../lib/prisma";
-import { Prisma, Product } from "@prisma/client";
+import { Prisma, Product, PrismaClient } from "@prisma/client";
+
+type PrismaExecutor = PrismaClient | Prisma.TransactionClient;
 
 export class ProductRepository {
+    constructor (private readonly prisma: PrismaExecutor){}
+
     async create(data: Prisma.ProductCreateInput): Promise<Product> {
         return prisma.product.create({
             data

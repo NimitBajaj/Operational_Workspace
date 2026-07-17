@@ -1,7 +1,9 @@
 import { PrismaClient, Prisma } from "@prisma/client";
 
+type PrismaExecutor = PrismaClient | Prisma.TransactionClient;
+
 export class ProjectRepository{
-    constructor(private readonly prisma: PrismaClient){}
+    constructor(private readonly prisma: PrismaExecutor){}
 
     async create(data: Prisma.ProjectCreateInput) {
     return this.prisma.project.create({
