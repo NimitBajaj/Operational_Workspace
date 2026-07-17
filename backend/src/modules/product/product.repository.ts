@@ -18,6 +18,34 @@ export class ProductRepository {
             },
         });
 }
+
+async findById(id: string) {
+    return prisma.product.findUnique({
+        where: {id},
+    });
+}
+
+async findAll() {
+    return prisma.product.findMany({
+        orderBy: {
+            createdAt: "desc",
+        },
+    });
+}
+
+async update(id: string, data: Prisma.ProductUpdateInput) {
+    return prisma.product.update({
+        where: {id},
+        data,
+    });
+}
+
+async delete(id: string) {
+    return prisma.product.delete({
+        where: {id},
+    });
+}
+
 }
 
 
