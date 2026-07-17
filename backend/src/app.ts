@@ -4,6 +4,7 @@ import { errorMiddleware } from "./middleware/error.middleware";
 import customerRoutes from "./modules/customer/customer.routes"
 import projectRoutes from "./modules/project/project.routes" 
 import productVariantRoutes from "./modules/product-variant/product-variant.routes"
+import contactRoutes from "./modules/contact/contact.routes"
 
 const app = express();
 
@@ -13,7 +14,7 @@ app.use("/products", productRoutes);
 app.use("/customers", customerRoutes);
 app.use("/projects", projectRoutes);
 app.use("/product-variants", productVariantRoutes);
-
+app.use("/contacts", contactRoutes);
 
 app.use(errorMiddleware);
 
