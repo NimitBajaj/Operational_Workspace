@@ -180,8 +180,8 @@ model Customer {
   // Basic Information
   name      String
   type      CustomerType
-  email     String @unique
-  phone     String @unique
+  email     String       @unique
+  phone     String       @unique
   gstNumber String?
 
   // Address
@@ -415,8 +415,9 @@ model Quotation {
   items     QuotationItem[]
   documents Document[]
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  payments  Payment[]
 
   @@unique([projectId, version])
   @@index([projectId])
@@ -554,6 +555,10 @@ model Payment {
 
   project Project @relation(fields: [projectId], references: [id])
 
+  quotationId String?
+
+  quotation Quotation? @relation(fields: [quotationId], references: [id])
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -562,4 +567,5 @@ model Payment {
   @@index([status])
   @@index([followUpDate])
   @@index([paidAt])
+  @@index([quotationId])
 }
