@@ -11,6 +11,7 @@ import projectContactRoutes from "./modules/projectContact/project-contact.route
 import documentRoutes from "./modules/document/dosument.routes"
 import taskRoutes from "./modules/task/task.routes"
 import activityRoutes from "./modules/activity/activity.routes"
+import noteRoutes from "./modules/note/note.routes"
 
 const app = express();
 
@@ -27,6 +28,7 @@ app.use("/projects/:projectId/contacts", projectContactRoutes);
 app.use("/documents", documentRoutes);
 app.use("/tasks", taskRoutes);
 app.use("/activities", activityRoutes);
+app.use("/notes", noteRoutes);
 
 app.use(errorMiddleware);
 
