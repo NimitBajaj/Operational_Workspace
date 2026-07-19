@@ -9,6 +9,7 @@ import quotationRoutes from "./modules/quotation/quotation.routes"
 import paymentRoutes from "./modules/payment/payment.routes"
 import projectContactRoutes from "./modules/projectContact/project-contact.routes"
 import documentRoutes from "./modules/document/dosument.routes"
+import taskRoutes from "./modules/task/task.routes"
 
 const app = express();
 
@@ -23,6 +24,7 @@ app.use("/quotations", quotationRoutes);
 app.use("/payments", paymentRoutes);
 app.use("/projects/:projectId/contacts", projectContactRoutes);
 app.use("/documents", documentRoutes);
+app.use("/tasks", taskRoutes);
 
 app.use(errorMiddleware);
 
