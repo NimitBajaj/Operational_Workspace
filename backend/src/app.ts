@@ -7,6 +7,7 @@ import productVariantRoutes from "./modules/product-variant/product-variant.rout
 import contactRoutes from "./modules/contact/contact.routes"
 import quotationRoutes from "./modules/quotation/quotation.routes"
 import paymentRoutes from "./modules/payment/payment.routes"
+import projectContactRoutes from "./modules/projectContact/project-contact.routes"
 
 const app = express();
 
@@ -19,6 +20,7 @@ app.use("/product-variants", productVariantRoutes);
 app.use("/contacts", contactRoutes);
 app.use("/quotations", quotationRoutes);
 app.use("/payments", paymentRoutes);
+app.use("/projects/:projectId/contacts", projectContactRoutes);
 
 app.use(errorMiddleware);
 
