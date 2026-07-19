@@ -10,6 +10,7 @@ import paymentRoutes from "./modules/payment/payment.routes"
 import projectContactRoutes from "./modules/projectContact/project-contact.routes"
 import documentRoutes from "./modules/document/dosument.routes"
 import taskRoutes from "./modules/task/task.routes"
+import activityRoutes from "./modules/activity/activity.routes"
 
 const app = express();
 
@@ -25,6 +26,7 @@ app.use("/payments", paymentRoutes);
 app.use("/projects/:projectId/contacts", projectContactRoutes);
 app.use("/documents", documentRoutes);
 app.use("/tasks", taskRoutes);
+app.use("/activities", activityRoutes);
 
 app.use(errorMiddleware);
 
