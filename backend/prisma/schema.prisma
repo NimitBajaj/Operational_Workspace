@@ -316,14 +316,45 @@ model ProjectContact {
   @@id([projectId, contactId])
 }
 
+model ProductCategory {
+  id String @id @default(cuid())
+
+  name String
+
+  slug String @unique
+
+  description String?
+
+  imageUrl String?
+
+  featured Boolean @default(false)
+
+  active Boolean @default(true)
+
+  sortOrder Int @default(0)
+
+  products Product[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([name])
+  @@index([slug])
+  @@index([active])
+  @@index([sortOrder])
+}
+
 model Product {
   id String @id @default(cuid())
 
   name        String
   description String?
 
-  category String
-  brand    String?
+  categoryId String
+
+  category ProductCategory @relation(fields: [categoryId], references: [id])
+
+  brand String?
 
   warranty String?
 
@@ -336,7 +367,7 @@ model Product {
   updatedAt DateTime @updatedAt
 
   @@index([name])
-  @@index([category])
+  @@index([categoryId])
   @@index([brand])
   @@index([active])
 }

@@ -12,6 +12,7 @@ import documentRoutes from "./modules/document/dosument.routes"
 import taskRoutes from "./modules/task/task.routes"
 import activityRoutes from "./modules/activity/activity.routes"
 import noteRoutes from "./modules/note/note.routes"
+import productCategoryRoutes from "./modules/product-category/product-category.routes"
 
 const app = express();
 
@@ -29,6 +30,7 @@ app.use("/documents", documentRoutes);
 app.use("/tasks", taskRoutes);
 app.use("/activities", activityRoutes);
 app.use("/notes", noteRoutes);
+app.use("/product-categories", productCategoryRoutes);
 
 app.use(errorMiddleware);
 
