@@ -13,9 +13,9 @@ export const ProductBaseSchema = z.object({
       .max(1000, "Description cannot exceed 1000 characters.")
       .optional(),
 
-    category: z
+    categoryId: z
       .string()
-      .trim()
+      .cuid()
       .min(2, "Category is required")
       .max(50),
 
@@ -42,7 +42,7 @@ export const UpdateProductSchema = ProductBaseSchema.partial();
 export const SearchProductSchema = z.object({
     query: z.string().trim().optional(),
 
-    category: z.string().trim().optional(),
+    categoryId: z.string().cuid().trim().optional(),
 
     brand: z.string().trim().optional(),
 

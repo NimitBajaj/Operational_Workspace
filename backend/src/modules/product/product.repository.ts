@@ -7,13 +7,13 @@ export class ProductRepository {
     constructor (private readonly prisma: PrismaExecutor){}
 
     async create(data: Prisma.ProductCreateInput): Promise<Product> {
-        return prisma.product.create({
+        return this.prisma.product.create({
             data
         });
     }
 
     async findByName(name: string): Promise<Product | null> { 
-        return prisma.product.findFirst({
+        return this.prisma.product.findFirst({
             where: { 
                 name: { 
                     equals: name,
@@ -24,13 +24,19 @@ export class ProductRepository {
 }
 
 async findById(id: string) {
-    return prisma.product.findUnique({
+    return this.prisma.product.findUnique({
         where: {id},
+        include: {
+            category: true,
+        },
     });
 }
 
 async findAll() {
-    return prisma.product.findMany({
+    return this.prisma.product.findMany({ 
+        include: {
+            category: true,
+        },
         orderBy: {
             createdAt: "desc",
         },
@@ -38,14 +44,14 @@ async findAll() {
 }
 
 async update(id: string, data: Prisma.ProductUpdateInput) {
-    return prisma.product.update({
+    return this.prisma.product.update({
         where: {id},
         data,
     });
 }
 
 async delete(id: string) {
-    return prisma.product.delete({
+    return this.prisma.product.delete({
         where: {id},
     });
 }
