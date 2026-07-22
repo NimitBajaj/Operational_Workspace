@@ -9,37 +9,48 @@ import {
 } from "./product-image.schema";
 
 import { NotFoundException } from "../../common/errors/not-found-error";
+import { StorageService } from "../../storage/storage.service";
+
 
 export class ProductImageService {
     constructor(
         private readonly productImageRepository: ProductImageRepository,
-        private readonly productRepository: ProductRepository
+        private readonly productRepository: ProductRepository,
+        private readonly storageService: StorageService
     ) {}
 
-    async create(data: CreateProductImageInput) {
-        const product = await this.productRepository.findById(data.productId);
+    async create(
+        productId: string,
+        file: Express.Multer.File,
+        data: CreateProductImageInput) {
+        const product = await this.productRepository.findById(productId);
+        const uploaded = await this.storageService.saveFile(file, "products");
 
         if (!product) {
             throw new NotFoundException("Product not found.");
         }
 
         if (data.isPrimary) {
-            await this.productImageRepository.clearPrimary(data.productId);
+            await this.productImageRepository.clearPrimary(productId);
         }
 
         const imageData: Prisma.ProductImageCreateInput = {
-            storageKey: data.storageKey,
-            imageUrl: data.imageUrl,
-            altText: data.altText,
-            isPrimary: data.isPrimary ?? false,
-            sortOrder: data.sortOrder ?? 0,
+    storageKey: uploaded.storageKey,
 
-            product: {
-                connect: {
-                    id: data.productId,
-                },
-            },
-        };
+    imageUrl: uploaded.fileUrl,
+
+    altText: data.altText,
+
+    isPrimary: data.isPrimary ?? false,
+
+    sortOrder: data.sortOrder ?? 0,
+
+    product: {
+        connect: {
+            id: productId,
+        },
+    },
+};
 
         return this.productImageRepository.create(imageData);
     }
@@ -64,43 +75,46 @@ export class ProductImageService {
         return image;
     }
 
-    async update(id: string, data: UpdateProductImageInput) {
-        const image = await this.findById(id);
+    async update(
+    id: string,
+    data: UpdateProductImageInput
+) {
+    const image = await this.findById(id);
 
-        const updateData: Prisma.ProductImageUpdateInput = {};
+    const updateData: Prisma.ProductImageUpdateInput = {};
 
-        if (data.storageKey !== undefined) {
-            updateData.storageKey = data.storageKey;
-        }
-
-        if (data.imageUrl !== undefined) {
-            updateData.imageUrl = data.imageUrl;
-        }
-
-        if (data.altText !== undefined) {
-            updateData.altText = data.altText;
-        }
-
-        if (data.sortOrder !== undefined) {
-            updateData.sortOrder = data.sortOrder;
-        }
-
-        if (data.isPrimary !== undefined) {
-            if (data.isPrimary) {
-                await this.productImageRepository.clearPrimary(
-                    image.productId
-                );
-            }
-
-            updateData.isPrimary = data.isPrimary;
-        }
-
-        return this.productImageRepository.update(id, updateData);
+    if (data.altText !== undefined) {
+        updateData.altText = data.altText;
     }
 
-    async delete(id: string) {
-        await this.findById(id);
+    if (data.sortOrder !== undefined) {
+        updateData.sortOrder = data.sortOrder;
+    }
 
-        return this.productImageRepository.delete(id);
+    if (data.isPrimary !== undefined) {
+
+        if (data.isPrimary) {
+            await this.productImageRepository.clearPrimary(
+                image.productId
+            );
+        }
+
+        updateData.isPrimary = data.isPrimary;
+    }
+
+    return this.productImageRepository.update(
+        id,
+        updateData
+    );
+}
+
+    async delete(id: string) {
+        const image = await this.findById(id);
+
+await this.storageService.deleteFile(
+    image.storageKey
+);
+
+await this.productImageRepository.delete(id);
     }
 }

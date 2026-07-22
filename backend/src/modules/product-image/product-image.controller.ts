@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 
 import { ProductImageService } from "./product-image.service";
 import { successResponse } from "../../utils/response";
+import { BadRequestException } from "../../common/errors/bad-request-error";
 
 export class ProductImageController {
     constructor(
@@ -9,16 +10,25 @@ export class ProductImageController {
     ) {}
 
     async create(req: Request, res: Response) {
-        const image = await this.productImageService.create(req.body);
 
-        return successResponse(
-            res,
-            image,
-            "Product image created successfully.",
-            201
-        );
+    if (!req.file) {
+        throw new BadRequestException("Image file is required.");
     }
 
+    const image =
+        await this.productImageService.create(
+            req.params.productId as string,
+            req.file,
+            req.body
+        );
+
+    return successResponse(
+        res,
+        image,
+        "Product image created successfully.",
+        201
+    );
+}
     async findByProduct(req: Request, res: Response) {
         const images =
             await this.productImageService.findByProduct(

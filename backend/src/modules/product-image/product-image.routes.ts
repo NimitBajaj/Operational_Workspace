@@ -1,26 +1,74 @@
-import { Router } from "express"
-import { validate } from "../../middleware/validation.middleware"
-import { asyncHandler } from "../../utils/async-handler"
-import { CreateProductImageSchema, UpdateProductImageSchema } from "./product-image.schema";
+import { Router } from "express";
+
+import { validate } from "../../middleware/validation.middleware";
+import { asyncHandler } from "../../utils/async-handler";
+
+import {
+    CreateProductImageSchema,
+    UpdateProductImageSchema,
+} from "./product-image.schema";
+
 import { productImageController } from ".";
+import { createUploader } from "../../middleware/upload.middleware";
+import { UploadType } from "../../upload/upload.types";
 
 const router = Router();
+const imageUpload = createUploader(UploadType.IMAGE);
 
-router.post("/",
+/**
+ * Create a new image for a product
+ */
+router.post(
+    "/products/:productId/images",
+
+    imageUpload.single("image"),
+
     validate(CreateProductImageSchema),
-    asyncHandler((req,res,next) => productImageController.create(req,res))
+
+    asyncHandler((req, res) =>
+        productImageController.create(req, res)
+    )
 );
 
-router.get("/products/:id",
-    asyncHandler((req,res,next) => productImageController.findByProduct(req,res)));
-router.get("/:id", 
-    asyncHandler((req,res,next) => productImageController.findById(req,res)));
+/**
+ * Get all images of a product
+ */
+router.get(
+    "/products/:productId/images",
+    asyncHandler((req, res) =>
+        productImageController.findByProduct(req, res)
+    )
+);
 
-router.patch("/:id",
+/**
+ * Get a single image
+ */
+router.get(
+    "/product-images/:id",
+    asyncHandler((req, res) =>
+        productImageController.findById(req, res)
+    )
+);
+
+/**
+ * Update image metadata
+ */
+router.patch(
+    "/product-images/:id",
     validate(UpdateProductImageSchema),
-    asyncHandler((req,res,next) => productImageController.update(req,res)));
+    asyncHandler((req, res) =>
+        productImageController.update(req, res)
+    )
+);
 
-router.delete("./id",
-    asyncHandler((req,res,next) => productImageController.delete(req,res)));
+/**
+ * Delete an image
+ */
+router.delete(
+    "/product-images/:id",
+    asyncHandler((req, res) =>
+        productImageController.delete(req, res)
+    )
+);
 
-    export default router;
+export default router;

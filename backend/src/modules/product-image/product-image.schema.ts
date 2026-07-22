@@ -1,17 +1,26 @@
 import { z } from "zod";
+import { validate } from "../../middleware/validation.middleware";
 
 export const ProductImageBaseSchema = z.object({
-    productId: z.string().cuid(),
+    altText: z
+        .string()
+        .trim()
+        .max(255)
+        .optional()
+        .or(z.literal(""))
+        .transform(value => value || undefined),
 
-    storageKey: z.string().trim().min(1),
+    isPrimary: z
+        .coerce
+        .boolean()
+        .optional(),
 
-    imageUrl: z.string().url(),
-
-    altText: z.string().trim().max(255).optional(),
-
-    isPrimary: z.boolean().optional(),
-
-    sortOrder: z.number().int().min(0).optional(),
+    sortOrder: z
+        .coerce
+        .number()
+        .int()
+        .min(0)
+        .optional(),
 });
 
 export const CreateProductImageSchema =

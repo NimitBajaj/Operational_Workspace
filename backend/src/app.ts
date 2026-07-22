@@ -1,4 +1,5 @@
 import express from "express";
+import path from "path";
 import productRoutes from "./modules/product/product.routes";
 import { errorMiddleware } from "./middleware/error.middleware";
 import customerRoutes from "./modules/customer/customer.routes"
@@ -33,7 +34,8 @@ app.use("/activities", activityRoutes);
 app.use("/notes", noteRoutes);
 app.use("/product-categories", productCategoryRoutes);
 app.use("/product-images", productImageRoutes);
-
+app.use("/uploads",
+    express.static(path.join(process.cwd(), "uploads")));
 
 app.use(errorMiddleware);
 
