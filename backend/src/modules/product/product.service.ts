@@ -2,6 +2,7 @@ import { Prisma } from "@prisma/client";
 
 import { ProductRepository } from "./product.repository";
 import { ProductCategoryRepository } from "../product-category/product-category.repository";
+import { generateSlug } from "../../utils/slug";
 
 import {
     CreateProductInput,
@@ -34,11 +35,24 @@ export class ProductService {
             throw new NotFoundException("Product category not found.");
         }
 
+        const slug = generateSlug(data.name);
+
+        const existingSlug = await this.productRepository.findBySlug(slug);
+
+if (existingSlug) {
+    throw new ConflictException(
+        `A product with slug "${slug}" already exists.`
+    );
+}
+
         const productData: Prisma.ProductCreateInput = {
             name: data.name,
+            slug,
+            shortDescription: data.shortDescription,
             description: data.description,
             warranty: data.warranty,
-            active: data.active,
+            featured: data.featured ?? false,
+            active: data.active ?? true,
 
             category: {
                 connect: {
@@ -87,8 +101,28 @@ export class ProductService {
         const updateData: Prisma.ProductUpdateInput = {};
 
         if (data.name !== undefined) {
-            updateData.name = data.name;
-        }
+    const slug = generateSlug(data.name);
+
+    const existingSlug =
+        await this.productRepository.findBySlug(slug);
+
+    if (existingSlug && existingSlug.id !== id) {
+        throw new ConflictException(
+            `A product with slug "${slug}" already exists.`
+        );
+    }
+
+    updateData.name = data.name;
+    updateData.slug = slug;
+}
+
+if (data.shortDescription !== undefined) {
+    updateData.shortDescription = data.shortDescription;
+}
+
+if (data.featured !== undefined) {
+    updateData.featured = data.featured;
+}
 
         if (data.description !== undefined) {
             updateData.description = data.description;
