@@ -9,7 +9,12 @@ export class ProductVariantRepository {
     return this.prisma.productVariant.create({
         data,
         include: {
-            product: true,
+            product: {
+                include: {
+                    category: true,
+                    images: true,
+                },
+            },
         },
     });
 }
@@ -18,8 +23,13 @@ async findById(id: string) {
     return this.prisma.productVariant.findUnique({
         where: { id },
         include: {
-            product: true,
-        },
+            product: {
+                include: {
+                    category: true,
+                    images: true,
+                    },
+                },
+            },
     });
 }
 
@@ -32,10 +42,26 @@ async findBySku(sku: string) {
 async findAll() {
     return this.prisma.productVariant.findMany({
         include: {
-            product: true,
+            product: {
+                include: {
+                    category: true,
+                    images: true,                   
+                },
+            },
         },
         orderBy: {
             createdAt: "desc",
+        },
+    });
+}
+
+async findByProduct(productId: string) {
+    return this.prisma.productVariant.findMany({
+        where: {
+            productId,
+        },
+        orderBy: {
+            createdAt: "asc",
         },
     });
 }
@@ -48,7 +74,12 @@ async update(
         where: { id },
         data,
         include: {
-            product: true,
+            product: {
+                include: {
+                    category: true,
+                    images: true,
+                },
+            },
         },
     });
 }
