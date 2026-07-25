@@ -173,6 +173,30 @@ enum PaymentStatus {
   DELAYED
 }
 
+enum UserRole {
+  ADMIN
+  SALES
+  PROJECT_MANAGER
+  STAFF
+  CUSTOMER
+}
+
+model User {
+  id        String  @id @default(cuid())
+  firstName String
+  lastName  String?
+  email     String  @unique
+  password  String
+  phone     String?
+
+  role UserRole @default(CUSTOMER)
+
+  active Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
 model Customer {
   // Primary Key
   id String @id @default(cuid())

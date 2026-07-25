@@ -15,6 +15,7 @@ import activityRoutes from "./modules/activity/activity.routes"
 import noteRoutes from "./modules/note/note.routes"
 import productCategoryRoutes from "./modules/product-category/product-category.routes"
 import productImageRoutes from "./modules/product-image/product-image.routes"
+import userRoutes from "./modules/user/user.routes"
 
 const app = express();
 
@@ -36,6 +37,7 @@ app.use("/product-categories", productCategoryRoutes);
 app.use("/product-images", productImageRoutes);
 app.use("/uploads",
     express.static(path.join(process.cwd(), "uploads")));
+app.use("/users", userRoutes);
 
 app.use(errorMiddleware);
 
