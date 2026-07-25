@@ -20,7 +20,6 @@ export class UserRepository {
     async create(data: Prisma.UserCreateInput): Promise<User> {
         return this.prisma.user.create({
             data,
-            select: userSelect,
         });
     }
 
@@ -31,9 +30,18 @@ export class UserRepository {
         });
     }
 
+    async findByEmailWithPassword(email: string) {
+    return this.prisma.user.findUnique({
+        where: {
+            email,
+        },
+    });
+}
+
     async findByEmail(email: string) {
         return this.prisma.user.findUnique({
             where: { email },
+            select: userSelect,
         });
     }
 
