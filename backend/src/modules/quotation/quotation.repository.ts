@@ -74,4 +74,17 @@ async delete(id: string) {
     });
 }
 
+async generateNextVersion(projectId: string) {
+    const latest = await this.prisma.quotation.findFirst({
+        where: {
+            projectId,
+        },
+        orderBy: {
+            version: "desc",
+        },
+    });
+
+    return latest ? latest.version + 1 : 1;
+}
+
 }

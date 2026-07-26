@@ -37,6 +37,13 @@ router.get(
     )
 );
 
+router.post(
+    "/:id/convert",
+    asyncHandler((req, res) =>
+        proposalRequestController.convert(req, res)
+    )
+);
+
 router.get(
     "/:id",
     asyncHandler((req, res) =>
@@ -58,5 +65,7 @@ router.delete(
         proposalRequestController.delete(req, res)
     )
 );
+
+
 
 export default router;

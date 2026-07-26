@@ -92,4 +92,19 @@ export class ProposalRequestRepository {
             },
         });
     }
+
+    async markConverted(
+    id: string,
+    quotationId: string
+) {
+    return this.prisma.proposalRequest.update({
+        where: { id },
+        data: {
+            status: "CONVERTED",
+            quotationId,
+            convertedAt: new Date(),
+        },
+    });
+}
+
 }

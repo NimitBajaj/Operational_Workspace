@@ -69,4 +69,17 @@ export class ProposalRequestController {
             "Proposal request deleted successfully."
         );
     }
+
+    async convert(req: Request, res: Response) {
+    const quotation =
+        await this.proposalRequestService.convert(
+            req.params.id as string
+        );
+
+    return successResponse(
+        res,
+        quotation,
+        "Proposal request converted successfully."
+    );
+}
 }

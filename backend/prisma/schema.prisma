@@ -484,7 +484,7 @@ model ProductVariant {
 model Quotation {
   id String @id @default(cuid())
 
-  projectId String
+  projectId String?
 
   quotationNumber String @unique
   version         Int    @default(1)
@@ -502,14 +502,15 @@ model Quotation {
 
   isCurrent Boolean @default(true)
 
-  project Project @relation(fields: [projectId], references: [id])
+  project Project? @relation(fields: [projectId], references: [id])
 
   items     QuotationItem[]
   documents Document[]
 
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  payments  Payment[]
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  payments        Payment[]
+  proposalRequest ProposalRequest?
 
   @@unique([projectId, version])
   @@index([projectId])
@@ -521,8 +522,14 @@ model Quotation {
 model QuotationItem {
   id String @id @default(cuid())
 
-  quotationId      String
+  quotationId String
+
   productVariantId String
+  productVariant   ProductVariant @relation(fields: [productVariantId], references: [id])
+
+  productName String
+  variantName String?
+  sku         String?
 
   displayName String
 
@@ -535,8 +542,7 @@ model QuotationItem {
 
   remarks String?
 
-  quotation      Quotation      @relation(fields: [quotationId], references: [id])
-  productVariant ProductVariant @relation(fields: [productVariantId], references: [id])
+  quotation Quotation @relation(fields: [quotationId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -673,7 +679,12 @@ model ProposalRequest {
 
   status ProposalRequestStatus @default(PENDING)
 
-  notes String?
+  notes       String?
+  quotationId String? @unique
+
+  quotation Quotation? @relation(fields: [quotationId], references: [id])
+
+  convertedAt DateTime?
 
   items ProposalRequestItem[]
 
