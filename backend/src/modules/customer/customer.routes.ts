@@ -15,38 +15,28 @@ const router = Router();
 
 router.post(
     "/",
-    authenticate,
-    authorize("ADMIN", "SALES"),
     validate(createCustomerSchema),
     asyncHandler((req, res, next) => customerController.create(req, res))
 );
 
 router.get(
     "/",
-    authenticate,
-    authorize("ADMIN", "SALES"),
     asyncHandler((req,res,next) => customerController.findAll(req,res))
 );
 
 router.get(
     "/:id",
-    authenticate,
-    authorize("ADMIN", "SALES"),
     asyncHandler((req,res,next) => customerController.findById(req,res))
 );
 
 router.patch(
     "/:id",
-    authenticate,
-    authorize("ADMIN", "SALES"),
     validate(updateCustomerSchema),
     asyncHandler((req,res,next) => customerController.update(req,res) )
 );
 
 router.delete(
     "/:id",
-    authenticate,
-    authorize("ADMIN"),
     asyncHandler((req,res,next) => customerController.delete(req,res))
 );
 

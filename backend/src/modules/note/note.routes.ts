@@ -16,8 +16,6 @@ const router = Router();
 
 router.post(
     "/",
-    authenticate,
-    authorize("ADMIN"),
     validate(createNoteSchema),
     asyncHandler((req, res) =>
         noteController.create(req, res)
@@ -26,8 +24,6 @@ router.post(
 
 router.get(
     "/",
-    authenticate,
-    authorize("ADMIN"),
     asyncHandler((req, res) =>
         noteController.findAll(req, res)
     )
@@ -35,8 +31,6 @@ router.get(
 
 router.get(
     "/project/:projectId",
-    authenticate,
-    authorize("ADMIN"),
     asyncHandler((req, res) =>
         noteController.findByProject(req, res)
     )
@@ -44,8 +38,6 @@ router.get(
 
 router.get(
     "/project/:projectId/pinned",
-    authenticate,
-    authorize("ADMIN"),
     asyncHandler((req, res) =>
         noteController.findPinned(req, res)
     )
@@ -53,8 +45,6 @@ router.get(
 
 router.get(
     "/:id",
-    authenticate,
-    authorize("ADMIN"),
     asyncHandler((req, res) =>
         noteController.findById(req, res)
     )
@@ -62,8 +52,6 @@ router.get(
 
 router.patch(
     "/:id",
-    authenticate,
-    authorize("ADMIN"),
     validate(updateNoteSchema),
     asyncHandler((req, res) =>
         noteController.update(req, res)
@@ -72,8 +60,6 @@ router.patch(
 
 router.delete(
     "/:id",
-    authenticate,
-    authorize("ADMIN"),
     asyncHandler((req, res) =>
         noteController.delete(req, res)
     )

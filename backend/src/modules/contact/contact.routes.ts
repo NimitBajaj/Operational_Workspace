@@ -16,8 +16,6 @@ const router = Router();
 
 router.post(
     "/",
-    authenticate,
-    authorize("ADMIN"),
     validate(createContactSchema),
     asyncHandler((req, res) =>
         contactController.create(req, res)
@@ -26,8 +24,6 @@ router.post(
 
 router.get(
     "/",
-    authenticate,
-    authorize("ADMIN"),
     asyncHandler((req, res) =>
         contactController.findAll(req, res)
     )
@@ -35,8 +31,6 @@ router.get(
 
 router.get(
     "/:id",
-    authenticate,
-    authorize("ADMIN"),
     asyncHandler((req, res) =>
         contactController.findById(req, res)
     )
@@ -44,8 +38,6 @@ router.get(
 
 router.patch(
     "/:id",
-    authenticate,
-    authorize("ADMIN"),
     validate(updateContactSchema),
     asyncHandler((req, res) =>
         contactController.update(req, res)
@@ -54,8 +46,6 @@ router.patch(
 
 router.delete(
     "/:id",
-    authenticate,
-    authorize("ADMIN"),
     asyncHandler((req, res) =>
         contactController.delete(req, res)
     )

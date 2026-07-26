@@ -12,8 +12,6 @@ const router = Router({ mergeParams: true });
 
 router.post(
     "/",
-    authenticate,
-        authorize("ADMIN"),
     validate(createProjectContactSchema.omit({ projectId: true })),
     asyncHandler((req, res) =>
         projectContactController.create(req, res)
@@ -22,8 +20,6 @@ router.post(
 
 router.get(
     "/",
-    authenticate,
-        authorize("ADMIN"),
     asyncHandler((req, res) =>
         projectContactController.findByProject(req, res)
     )
@@ -31,8 +27,6 @@ router.get(
 
 router.delete(
     "/:contactId",
-    authenticate,
-        authorize("ADMIN"),
     asyncHandler((req, res) =>
         projectContactController.delete(req, res)
     )

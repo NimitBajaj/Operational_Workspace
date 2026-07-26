@@ -13,8 +13,6 @@ const router = Router();
 
 router.post(
     "/",
-    authenticate,
-    authorize("ADMIN"),
     validate(createActivitySchema),
     asyncHandler((req, res) =>
         activityController.create(req, res)
@@ -23,8 +21,6 @@ router.post(
 
 router.get(
     "/",
-    authenticate,
-    authorize("ADMIN"),
     asyncHandler((req, res) =>
         activityController.findAll(req, res)
     )
@@ -32,8 +28,6 @@ router.get(
 
 router.get(
     "/project/:projectId",
-    authenticate,
-    authorize("ADMIN"),
     asyncHandler((req, res) =>
         activityController.findByProject(req, res)
     )
@@ -41,8 +35,6 @@ router.get(
 
 router.get(
     "/:id",
-    authenticate,
-    authorize("ADMIN"),
     asyncHandler((req, res) =>
         activityController.findById(req, res)
     )

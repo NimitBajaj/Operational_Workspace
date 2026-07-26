@@ -16,8 +16,6 @@ const router = Router();
 
 router.post(
     "/",
-    authenticate,
-    authorize("ADMIN"),
     validate(CreateProductCategorySchema),
     asyncHandler((req, res) =>
         productCategoryController.create(req, res)
@@ -26,8 +24,6 @@ router.post(
 
 router.get(
     "/",
-    authenticate,
-    authorize("ADMIN", "CUSTOMER"),
     asyncHandler((req, res) =>
         productCategoryController.findAll(req, res)
     )
@@ -35,8 +31,6 @@ router.get(
 
 router.get(
     "/:id",
-    authenticate,
-    authorize("ADMIN", "CUSTOMER"),
     asyncHandler((req, res) =>
         productCategoryController.findById(req, res)
     )
@@ -44,8 +38,6 @@ router.get(
 
 router.patch(
     "/:id",
-    authenticate,
-    authorize("ADMIN"),
     validate(UpdateProductCategorySchema),
     asyncHandler((req, res) =>
         productCategoryController.update(req, res)
@@ -54,8 +46,6 @@ router.patch(
 
 router.delete(
     "/:id",
-    authenticate,
-    authorize("ADMIN"),
     asyncHandler((req, res) =>
         productCategoryController.delete(req, res)
     )

@@ -18,8 +18,6 @@ const router = Router();
 
 router.post(
     "/",
-    authenticate,
-    authorize("ADMIN"),
     validate(createPaymentSchema),
     asyncHandler((req, res) =>
         paymentController.create(req, res)
@@ -28,8 +26,6 @@ router.post(
 
 router.get(
     "/",
-    authenticate,
-    authorize("ADMIN"),
     asyncHandler((req, res) =>
         paymentController.findAll(req, res)
     )
@@ -37,8 +33,6 @@ router.get(
 
 router.get(
     "/:id",
-    authenticate,
-    authorize("ADMIN"),
     asyncHandler((req, res) =>
         paymentController.findById(req, res)
     )
@@ -46,8 +40,6 @@ router.get(
 
 router.patch(
     "/:id",
-    authenticate,
-    authorize("ADMIN"),
     validate(updatePaymentSchema),
     asyncHandler((req, res) =>
         paymentController.update(req, res)
@@ -56,8 +48,6 @@ router.patch(
 
 router.patch(
     "/:id/pay",
-    authenticate,
-    authorize("ADMIN"),
     validate(markPaymentPaidSchema),
     asyncHandler((req, res) =>
         paymentController.markAsPaid(req, res)
@@ -66,8 +56,6 @@ router.patch(
 
 router.patch(
     "/:id/follow-up",
-    authenticate,
-    authorize("ADMIN"),
     validate(followUpSchema),
     asyncHandler((req, res) =>
         paymentController.scheduleFollowUp(req, res)
@@ -76,8 +64,6 @@ router.patch(
 
 router.delete(
     "/:id",
-    authenticate,
-    authorize("ADMIN"),
     asyncHandler((req, res) =>
         paymentController.delete(req, res)
     )

@@ -22,8 +22,6 @@ const imageUpload = createUploader(UploadType.IMAGE);
  */
 router.post(
     "/products/:productId/images",
-    authenticate,
-    authorize("ADMIN"),
     imageUpload.single("image"),
 
     validate(CreateProductImageSchema),
@@ -38,8 +36,6 @@ router.post(
  */
 router.get(
     "/products/:productId/images",
-    authenticate,
-    authorize("ADMIN", "CUSTOMER"),
     asyncHandler((req, res) =>
         productImageController.findByProduct(req, res)
     )
@@ -50,8 +46,6 @@ router.get(
  */
 router.get(
     "/product-images/:id",
-    authenticate,
-    authorize("ADMIN", "CUSTOMER"),
     asyncHandler((req, res) =>
         productImageController.findById(req, res)
     )
@@ -62,8 +56,6 @@ router.get(
  */
 router.patch(
     "/product-images/:id",
-    authenticate,
-    authorize("ADMIN"),
     validate(UpdateProductImageSchema),
     asyncHandler((req, res) =>
         productImageController.update(req, res)
@@ -75,8 +67,6 @@ router.patch(
  */
 router.delete(
     "/product-images/:id",
-    authenticate,
-    authorize("ADMIN"),
     asyncHandler((req, res) =>
         productImageController.delete(req, res)
     )

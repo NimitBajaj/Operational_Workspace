@@ -10,35 +10,25 @@ import { authorize } from '../../middleware/authorize.middleware';
 const router = Router();
 
 router.post("/", 
-    authenticate,
-    authorize("ADMIN"),
     validate(CreateProductSchema),
     asyncHandler((req, res, next) => productController.create(req, res))
 );
 
 router.get("/",
-     authenticate,
-    authorize("ADMIN", "CUSTOMER"),
     asyncHandler((req, res, next) => productController.findAll(req,res))
 );
 
 router.get("/:id", 
-    authenticate,
-    authorize("ADMIN", "CUSTOMER"),
     asyncHandler((req,res,next) => productController.findById(req,res))
 );
 
 router.patch("/:id",
-    authenticate,
-    authorize("ADMIN"),
     validate(UpdateProductSchema),
     asyncHandler((req,res,next) => 
     productController.update(req,res))
 );
 
 router.delete("/:id",
-    authenticate,
-    authorize("ADMIN", "CUSTOMER"),
     asyncHandler((req,res,next) => 
     productController.delete(req,res))
 )

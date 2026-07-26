@@ -23,8 +23,6 @@ router.post(
 
 router.get(
     "/",
-    authenticate,
-        authorize("ADMIN"),
     asyncHandler((req, res) =>
         userController.findAll(req, res)
     )
@@ -32,8 +30,6 @@ router.get(
 
 router.get(
     "/:id",
-    authenticate,
-        authorize("ADMIN"),
     asyncHandler((req, res) =>
         userController.findById(req, res)
     )
@@ -41,8 +37,6 @@ router.get(
 
 router.patch(
     "/:id",
-    authenticate,
-        authorize("ADMIN"),
     validate(UpdateUserSchema),
     asyncHandler((req, res) =>
         userController.update(req, res)
@@ -51,8 +45,6 @@ router.patch(
 
 router.delete(
     "/:id",
-    authenticate,
-        authorize("ADMIN"),
     asyncHandler((req, res) =>
         userController.delete(req, res)
     )
