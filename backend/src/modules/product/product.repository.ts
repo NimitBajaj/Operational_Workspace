@@ -59,6 +59,53 @@ async findAll() {
     });
 }
 
+async findCatalogueProducts() {
+    return this.prisma.product.findMany({
+        where: {
+            active: true,
+        },
+        include: {
+            category: true,
+
+            images: {
+                where: {
+                    isPrimary: true,
+                },
+                take: 1,
+            },
+        },
+        orderBy: {
+            name: "asc",
+        },
+    });
+}
+
+async findCatalogueBySlug(slug: string) {
+    return this.prisma.product.findUnique({
+        where: {
+            slug,
+        },
+        include: {
+            category: true,
+
+            images: {
+                orderBy: {
+                    sortOrder: "asc",
+                },
+            },
+
+            variants: {
+                where: {
+                    active: true,
+                },
+                orderBy: {
+                    sellingPrice: "asc",
+                },
+            },
+        },
+    });
+}
+
 async update(id: string, data: Prisma.ProductUpdateInput) {
     return this.prisma.product.update({
         where: {id},
