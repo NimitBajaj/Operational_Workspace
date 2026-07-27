@@ -57,4 +57,14 @@ router.post(
     )
 );
 
+router.get(
+    "/:id/pdf",
+    asyncHandler((req, res) =>
+        quotationController.downloadPdf(
+            req,
+            res
+        )
+    )
+);
+
 export default router;

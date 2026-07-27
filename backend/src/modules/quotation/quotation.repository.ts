@@ -23,7 +23,15 @@ async findById(id: string) {
             project: true,
             items: {
                 include: {
-                    productVariant: true,
+                    productVariant: {
+                        include: {
+                            product: {
+                                include: {
+                                    images: true,
+                                },
+                            },
+                        },
+                    },
                 },
             },
         },
@@ -60,7 +68,15 @@ async update(
         include: {
             items: {
                 include: {
-                    productVariant: true,
+                    productVariant: {
+                        include: {
+                            product: {
+                                include: {
+                                    images: true,
+                                },
+                            },
+                        },
+                    },
                 },
             },
             project: true,

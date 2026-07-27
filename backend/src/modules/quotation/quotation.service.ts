@@ -5,6 +5,8 @@ import { QuotationItemRepository } from "./quotation-item.respoitory";
 import { ProductVariantRepository } from "../product-variant/product-variant.repository";
 import { ProjectRepository } from "../project/project.repository";
 import { QuotationBuilderService } from "../quotation-builder/quotation-builder.service";
+import { CompanySettingsRepository } from "../company-settings/company-settings.repository";
+import { QuotationPdfService } from "../pdf/quotation-pdf.service";
 
 import {
     CreateManualQuotationInput,
@@ -208,6 +210,30 @@ async createManualQuotation(
         remarks: data.remarks,
         items: data.items,
     });
+}
+
+async generatePdf(id: string) {
+    const quotation = await this.findById(id);
+
+    const companyRepository =
+        new CompanySettingsRepository(this.prisma);
+
+    const company =
+        await companyRepository.find();
+
+    if (!company) {
+        throw new NotFoundException(
+            "Company settings not found."
+        );
+    }
+
+    const pdfService =
+        new QuotationPdfService();
+
+    return pdfService.generate(
+        quotation,
+        company
+    );
 }
 
 }
