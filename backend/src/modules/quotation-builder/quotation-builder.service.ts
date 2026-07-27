@@ -5,6 +5,7 @@ import { QuotationItemRepository } from "../quotation/quotation-item.respoitory"
 import { ProductVariantRepository } from "../product-variant/product-variant.repository";
 import { prisma } from "../../lib/prisma";
 import { NotFoundException } from "../../common/errors/not-found-error";
+import { QuotationNumberService } from "../quotation-number/quotation-number.service";
 
 export class QuotationBuilderService {
     constructor(){}
@@ -24,10 +25,16 @@ export class QuotationBuilderService {
     const proposalRepository =
         new ProposalRequestRepository(tx);
 
+    const quotationNumberService =
+    new QuotationNumberService(prisma);
+
+const quotationNumber =
+    await quotationNumberService.generate();
+
     const quotation =
     await quotationRepository.create({
 
-        quotationNumber: `QT-${Date.now()}`,
+        quotationNumber,
 
         version: 1,
 
