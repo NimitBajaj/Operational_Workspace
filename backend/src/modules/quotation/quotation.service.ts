@@ -4,6 +4,11 @@ import { QuotationRepository } from "./quotation.repository";
 import { QuotationItemRepository } from "./quotation-item.respoitory";
 import { ProductVariantRepository } from "../product-variant/product-variant.repository";
 import { ProjectRepository } from "../project/project.repository";
+import { QuotationBuilderService } from "../quotation-builder/quotation-builder.service";
+
+import {
+    CreateManualQuotationInput,
+} from "./create-manual-quotation.schema";
 
 import { CreateQuotationInput } from "./quotation.schema";
 
@@ -97,33 +102,49 @@ export class QuotationService {
 
                 const lineTotal = taxable.add(lineGST);
 
-                await quotationItemRepository.create({
-                    displayName: variant.product.name,
+               const variantName = [
+    variant.wattage,
+    variant.colorTemperature,
+    variant.finish,
+]
+    .filter(Boolean)
+    .join(" - ");
 
-                    quantity: item.quantity,
+await quotationItemRepository.create({
+    productName: variant.product.name,
 
-                    unitPrice,
+    variantName,
 
-                    discount: lineDiscount,
+    sku: variant.sku,
 
-                    gst: lineGST,
+    displayName: variantName
+        ? `${variant.product.name} - ${variantName}`
+        : variant.product.name,
 
-                    lineTotal,
+    quantity: item.quantity,
 
-                    remarks: item.remarks,
+    unitPrice,
 
-                    quotation: {
-                        connect: {
-                            id: quotation.id,
-                        },
-                    },
+    discount: lineDiscount,
 
-                    productVariant: {
-                        connect: {
-                            id: variant.id,
-                        },
-                    },
-                });
+    gst: lineGST,
+
+    lineTotal,
+
+    remarks: item.remarks,
+
+    quotation: {
+        connect: {
+            id: quotation.id,
+        },
+    },
+
+    productVariant: {
+        connect: {
+            id: variant.id,
+        },
+    },
+});
 
                 subtotal = subtotal.add(taxable);
                 gst = gst.add(lineGST);
@@ -176,5 +197,17 @@ async delete(id: string) {
     });
 }
 
+async createManualQuotation(
+    data: CreateManualQuotationInput
+) {
+    const quotationBuilder =
+        new QuotationBuilderService();
+
+    return quotationBuilder.build({
+        projectId: data.projectId,
+        remarks: data.remarks,
+        items: data.items,
+    });
+}
 
 }

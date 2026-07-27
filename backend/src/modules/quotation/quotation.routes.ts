@@ -9,6 +9,7 @@ import { authorize } from "../../middleware/authorize.middleware";
 import {
     createQuotationSchema
 } from "./quotation.schema";
+import { createManualQuotationSchema } from "./create-manual-quotation.schema";
 
 const router = Router();
 
@@ -38,6 +39,21 @@ router.delete(
     "/:id",
     asyncHandler((req, res) =>
         quotationController.delete(req, res)
+    )
+);
+
+router.post(
+    "/manual",
+
+    validate(
+        createManualQuotationSchema
+    ),
+
+    asyncHandler((req, res) =>
+        quotationController.createManualQuotation(
+            req,
+            res
+        )
     )
 );
 

@@ -49,4 +49,19 @@ export class QuotationController {
             "Quotation deleted successfully"
         );
     }
+
+    async createManualQuotation(
+    req: Request,
+    res: Response
+) {
+    const quotation =
+        await this.quotationService
+            .createManualQuotation(req.body);
+
+    return successResponse(
+        res,
+        quotation,
+        "Quotation created successfully."
+    );
+}
 }

@@ -4,7 +4,7 @@ import { QuotationItemRepository } from "../quotation/quotation-item.respoitory"
 import { ProposalRequestRepository } from "./proposal-request.repository";
 import { ProductVariantRepository } from "../product-variant/product-variant.repository";
 import { QuotationRepository } from "../quotation/quotation.repository";
-
+import { QuotationBuilderService } from "../quotation-builder/quotation-builder.service";
 import {
     CreateProposalRequestInput,
     UpdateProposalRequestInput,
@@ -150,135 +150,23 @@ async delete(id: string) {
 async convert(id: string) {
     const proposal = await this.findById(id);
 
-    if (proposal.status === "CONVERTED") {
+    if (proposal.status === "CONVERTED" || proposal.quotationId) {
         throw new ConflictException(
             "Proposal request has already been converted."
         );
     }
 
-    return prisma.$transaction(async (tx) => {
-        const quotationRepository =
-    new QuotationRepository(tx);
+    const quotationBuilder = new QuotationBuilderService();
 
-const quotationItemRepository =
-    new QuotationItemRepository(tx);
-
-const proposalRepository =
-    new ProposalRequestRepository(tx);
-
-     const quotation =
-        await quotationRepository.create({
-            quotationNumber: `QT-${Date.now()}`,
-        version: 1,
-        status: "QUOTATION_DRAFT",
-
-        subtotal: new Prisma.Decimal(0),
-        total: new Prisma.Decimal(0),
-
-        discount: new Prisma.Decimal(0),
-        gst: new Prisma.Decimal(0),
-
-        remarks: proposal.notes,
-
-        validUntil: null,
-
-        proposalRequest: {
-            connect: {
-                id: proposal.id,
-            },
-        },
-        });
-
-        let subtotal = new Prisma.Decimal(0);
-let gstTotal = new Prisma.Decimal(0);
-
-const quotationItems: Prisma.QuotationItemCreateManyInput[] = [];
-
-for (const item of proposal.items){
-    const variant = item.productVariant;
-
-if (!variant) {
-    throw new NotFoundException(
-        `Product variant not found.`
-    );
-}
-
-const unitPrice = variant.sellingPrice;
-
-const discount = new Prisma.Decimal(0);
-
-const taxableAmount = unitPrice.minus(discount);
-
-const gst =
-    taxableAmount.mul(
-        variant.gstPercent.div(100)
-    );
-
-const lineTotal =
-    taxableAmount
-        .plus(gst)
-        .mul(item.quantity);
-
-subtotal = subtotal.plus(
-    taxableAmount.mul(item.quantity)
-);
-
-gstTotal = gstTotal.plus(
-    gst.mul(item.quantity)
-);
-
-quotationItems.push({
-    quotationId: quotation.id,
-
-    productVariantId: variant.id,
-
-    productName: item.productName,
-    variantName: item.variantName,
-    sku: item.sku,
-
-    displayName:
-        item.variantName
-            ? `${item.productName} - ${item.variantName}`
-            : item.productName,
-
-    quantity: item.quantity,
-
-    unitPrice,
-
-    discount,
-
-    gst,
-
-    lineTotal,
-
-    remarks: null,
-});
-}
-
-await quotationItemRepository.createMany(
-    quotationItems
-);
-
-const total = subtotal.plus(gstTotal);
-
-await quotationRepository.update(
-    quotation.id,
-    {
-        subtotal,
-        gst: gstTotal,
-        total,
-    }
-);
-
-await proposalRepository.markConverted(
-    proposal.id,
-    quotation.id
-);
-
-return quotationRepository.findById(
-    quotation.id
-);
+    const quotation = await quotationBuilder.build({
+        proposalRequestId: proposal.id,
+        remarks: proposal.notes ?? undefined,
+        items: proposal.items.map((item) => ({
+            productVariantId: item.productVariantId,
+            quantity: item.quantity,
+        })),
     });
-}
-}   
 
+    return quotation;
+}
+}
