@@ -23,7 +23,15 @@ async findById(id: string) {
             project: true,
             items: {
                 include: {
-                    productVariant: true,
+                    productVariant: {
+                        include: {
+                            product: {
+                                include: {
+                                    images: true,
+                                },
+                            },
+                        },
+                    },
                 },
             },
         },
@@ -60,7 +68,15 @@ async update(
         include: {
             items: {
                 include: {
-                    productVariant: true,
+                    productVariant: {
+                        include: {
+                            product: {
+                                include: {
+                                    images: true,
+                                },
+                            },
+                        },
+                    },
                 },
             },
             project: true,
@@ -72,6 +88,19 @@ async delete(id: string) {
     return this.prisma.quotation.delete({
         where: { id },
     });
+}
+
+async generateNextVersion(projectId: string) {
+    const latest = await this.prisma.quotation.findFirst({
+        where: {
+            projectId,
+        },
+        orderBy: {
+            version: "desc",
+        },
+    });
+
+    return latest ? latest.version + 1 : 1;
 }
 
 }

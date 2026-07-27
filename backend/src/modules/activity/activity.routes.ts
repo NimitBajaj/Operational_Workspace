@@ -6,6 +6,8 @@ import { asyncHandler } from "../../utils/async-handler";
 import { validate } from "../../middleware/validation.middleware";
 
 import { createActivitySchema } from "./activity.schema";
+import { authenticate } from "../../middleware/auth.middleware";
+import { authorize } from "../../middleware/authorize.middleware";
 
 const router = Router();
 

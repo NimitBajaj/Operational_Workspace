@@ -49,4 +49,44 @@ export class QuotationController {
             "Quotation deleted successfully"
         );
     }
+
+    async createManualQuotation(
+    req: Request,
+    res: Response
+) {
+    const quotation =
+        await this.quotationService
+            .createManualQuotation(req.body);
+
+    return successResponse(
+        res,
+        quotation,
+        "Quotation created successfully."
+    );
+}
+
+async downloadPdf(
+    req: Request,
+    res: Response
+) {
+    const pdf =
+        await this.quotationService.generatePdf(
+            req.params.id as string
+        );
+
+    res.setHeader(
+        "Content-Type",
+        "application/pdf"
+    );
+
+    res.setHeader(
+        "Content-Disposition",
+        `inline; filename=quotation-${req.params.id}.pdf`
+    );
+
+    pdf.pipe(res);
+
+    pdf.end();
+}
+
 }

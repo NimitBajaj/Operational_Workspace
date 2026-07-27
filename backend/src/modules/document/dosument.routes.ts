@@ -9,6 +9,8 @@ import {
     createDocumentSchema,
     updateDocumentSchema,
 } from "./document.schema";
+import { authenticate } from "../../middleware/auth.middleware";
+import { authorize } from "../../middleware/authorize.middleware";
 
 const router = Router();
 

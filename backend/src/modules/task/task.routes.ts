@@ -4,6 +4,8 @@ import { taskController } from "./index";
 
 import { asyncHandler } from "../../utils/async-handler";
 import { validate } from "../../middleware/validation.middleware";
+import { authenticate } from "../../middleware/auth.middleware";
+import { authorize } from "../../middleware/authorize.middleware";
 
 import {
     createTaskSchema,

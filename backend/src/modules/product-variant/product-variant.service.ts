@@ -83,6 +83,21 @@ async findById(id: string) {
     return variant;
 }
 
+async findByProduct(productId: string) {
+    const product =
+        await this.productRepository.findById(productId);
+
+    if (!product) {
+        throw new NotFoundException(
+            "Product not found."
+        );
+    }
+
+    return this.productVariantRepository.findByProduct(
+        productId
+    );
+}
+
 async update(id: string, data: UpdateProductVariantInput) {
     await this.findById(id);
 

@@ -8,6 +8,8 @@ import { asyncHandler } from "../../utils/async-handler";
 import {createCustomerSchema, updateCustomerSchema} from "./customer.schema"
 import { runInNewContext } from "vm";
 import { customerController } from ".";
+import { authenticate } from "../../middleware/auth.middleware";
+import { authorize } from "../../middleware/authorize.middleware";
 
 const router = Router();
 

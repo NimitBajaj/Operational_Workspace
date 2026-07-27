@@ -1,4 +1,5 @@
 import express from "express";
+import path from "path";
 import productRoutes from "./modules/product/product.routes";
 import { errorMiddleware } from "./middleware/error.middleware";
 import customerRoutes from "./modules/customer/customer.routes"
@@ -12,6 +13,13 @@ import documentRoutes from "./modules/document/dosument.routes"
 import taskRoutes from "./modules/task/task.routes"
 import activityRoutes from "./modules/activity/activity.routes"
 import noteRoutes from "./modules/note/note.routes"
+import productCategoryRoutes from "./modules/product-category/product-category.routes"
+import productImageRoutes from "./modules/product-image/product-image.routes"
+import userRoutes from "./modules/user/user.routes"
+import authRoutes from "./modules/auth/auth.routes"
+import catalogueRoutes from "./modules/catalogue/catalogue.routes"
+import proposalRequestRoutes from "./modules/proposal-request/proposal-request.routes"
+import companySettingsRoutes from "./modules/company-settings/company-settings.routes"
 
 const app = express();
 
@@ -29,6 +37,15 @@ app.use("/documents", documentRoutes);
 app.use("/tasks", taskRoutes);
 app.use("/activities", activityRoutes);
 app.use("/notes", noteRoutes);
+app.use("/product-categories", productCategoryRoutes);
+app.use("/product-images", productImageRoutes);
+app.use("/uploads",
+    express.static(path.join(process.cwd(), "uploads")));
+app.use("/users", userRoutes);
+app.use("/auth", authRoutes);
+app.use("/catalogue", catalogueRoutes);
+app.use("/proposal-requests", proposalRequestRoutes);
+app.use("/company-settings", companySettingsRoutes);
 
 app.use(errorMiddleware);
 

@@ -7,29 +7,25 @@ export const ProductBaseSchema = z.object({
      .min(3, "Product name must be atleast 3 characters")
      .max(100, "Product name cannot exceed 100 characters"),
 
+    shortDescription: z.string().max(250).optional(),
+
     description: z
       .string()
       .trim()
       .max(1000, "Description cannot exceed 1000 characters.")
       .optional(),
 
-    category: z
+    categoryId: z
       .string()
-      .trim()
-      .min(2, "Category is required")
-      .max(50),
-
-    brand: z
-      .string()
-      .trim()
-      .max(50)
-      .optional(),
+      .cuid("Invalaid Category Id"),
 
     warranty: z
       .string()
       .trim()
       .max(50)
       .optional(),
+
+    featured: z.boolean().optional(), 
 
     active: z.boolean().optional().default(true),
 
@@ -42,9 +38,7 @@ export const UpdateProductSchema = ProductBaseSchema.partial();
 export const SearchProductSchema = z.object({
     query: z.string().trim().optional(),
 
-    category: z.string().trim().optional(),
-
-    brand: z.string().trim().optional(),
+    categoryId: z.string().cuid().trim().optional(),
 
     active: z.coerce.boolean().optional(),
 

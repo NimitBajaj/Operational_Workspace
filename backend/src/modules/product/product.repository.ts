@@ -7,13 +7,29 @@ export class ProductRepository {
     constructor (private readonly prisma: PrismaExecutor){}
 
     async create(data: Prisma.ProductCreateInput): Promise<Product> {
-        return prisma.product.create({
+        return this.prisma.product.create({
             data
         });
     }
 
+    async findBySlug(slug: string): Promise<Product |null> {
+        return this.prisma.product.findUnique({
+            where: {
+                slug
+            }
+        });
+    }
+
+    async countByCategory(categoryId: string): Promise<number> {
+    return this.prisma.product.count({
+        where: {
+            categoryId,
+        },
+    });
+}
+    
     async findByName(name: string): Promise<Product | null> { 
-        return prisma.product.findFirst({
+        return this.prisma.product.findFirst({
             where: { 
                 name: { 
                     equals: name,
@@ -24,28 +40,81 @@ export class ProductRepository {
 }
 
 async findById(id: string) {
-    return prisma.product.findUnique({
+    return this.prisma.product.findUnique({
         where: {id},
+        include: {
+            category: true,
+        },
     });
 }
 
 async findAll() {
-    return prisma.product.findMany({
+    return this.prisma.product.findMany({ 
+        include: {
+            category: true,
+        },
         orderBy: {
             createdAt: "desc",
         },
     });
 }
 
+async findCatalogueProducts() {
+    return this.prisma.product.findMany({
+        where: {
+            active: true,
+        },
+        include: {
+            category: true,
+
+            images: {
+                where: {
+                    isPrimary: true,
+                },
+                take: 1,
+            },
+        },
+        orderBy: {
+            name: "asc",
+        },
+    });
+}
+
+async findCatalogueBySlug(slug: string) {
+    return this.prisma.product.findUnique({
+        where: {
+            slug,
+        },
+        include: {
+            category: true,
+
+            images: {
+                orderBy: {
+                    sortOrder: "asc",
+                },
+            },
+
+            variants: {
+                where: {
+                    active: true,
+                },
+                orderBy: {
+                    sellingPrice: "asc",
+                },
+            },
+        },
+    });
+}
+
 async update(id: string, data: Prisma.ProductUpdateInput) {
-    return prisma.product.update({
+    return this.prisma.product.update({
         where: {id},
         data,
     });
 }
 
 async delete(id: string) {
-    return prisma.product.delete({
+    return this.prisma.product.delete({
         where: {id},
     });
 }

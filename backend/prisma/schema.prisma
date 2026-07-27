@@ -173,6 +173,37 @@ enum PaymentStatus {
   DELAYED
 }
 
+enum UserRole {
+  ADMIN
+  SALES
+  PROJECT_MANAGER
+  STAFF
+  CUSTOMER
+}
+
+enum ProposalRequestStatus {
+  PENDING
+  REVIEWING
+  CONVERTED
+  REJECTED
+}
+
+model User {
+  id        String  @id @default(cuid())
+  firstName String
+  lastName  String?
+  email     String  @unique
+  password  String
+  phone     String?
+
+  role UserRole @default(CUSTOMER)
+
+  active Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
 model Customer {
   // Primary Key
   id String @id @default(cuid())
@@ -316,29 +347,89 @@ model ProjectContact {
   @@id([projectId, contactId])
 }
 
-model Product {
+model ProductCategory {
   id String @id @default(cuid())
 
-  name        String
+  name String
+
+  slug String @unique
+
   description String?
 
-  category String
-  brand    String?
+  imageUrl String?
 
-  warranty String?
+  featured Boolean @default(false)
 
   active Boolean @default(true)
 
-  variants  ProductVariant[]
-  documents Document[]
+  sortOrder Int @default(0)
+
+  products Product[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@index([name])
-  @@index([category])
-  @@index([brand])
+  @@index([slug])
   @@index([active])
+  @@index([sortOrder])
+}
+
+model Product {
+  id String @id @default(cuid())
+
+  name             String
+  slug             String  @unique
+  shortDescription String?
+
+  description String?
+
+  categoryId String
+
+  category ProductCategory @relation(fields: [categoryId], references: [id])
+
+  warranty String?
+
+  featured Boolean @default(false)
+  active   Boolean @default(true)
+
+  variants  ProductVariant[]
+  documents Document[]
+  images    ProductImage[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([name])
+  @@index([slug])
+  @@index([categoryId])
+  @@index([featured])
+  @@index([active])
+}
+
+model ProductImage {
+  id String @id @default(cuid())
+
+  productId String
+
+  storageKey String
+
+  imageUrl String
+
+  altText String?
+
+  isPrimary Boolean @default(false)
+
+  sortOrder Int @default(0)
+
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([productId])
+  @@index([sortOrder])
+  @@index([isPrimary])
 }
 
 model ProductVariant {
@@ -382,8 +473,9 @@ model ProductVariant {
   quotationItems QuotationItem[]
 
   // Audit
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt            DateTime              @default(now())
+  updatedAt            DateTime              @updatedAt
+  proposalRequestItems ProposalRequestItem[]
 
   @@index([productId])
   @@index([active])
@@ -392,7 +484,7 @@ model ProductVariant {
 model Quotation {
   id String @id @default(cuid())
 
-  projectId String
+  projectId String?
 
   quotationNumber String @unique
   version         Int    @default(1)
@@ -410,14 +502,15 @@ model Quotation {
 
   isCurrent Boolean @default(true)
 
-  project Project @relation(fields: [projectId], references: [id])
+  project Project? @relation(fields: [projectId], references: [id])
 
   items     QuotationItem[]
   documents Document[]
 
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  payments  Payment[]
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  payments        Payment[]
+  proposalRequest ProposalRequest?
 
   @@unique([projectId, version])
   @@index([projectId])
@@ -429,8 +522,14 @@ model Quotation {
 model QuotationItem {
   id String @id @default(cuid())
 
-  quotationId      String
+  quotationId String
+
   productVariantId String
+  productVariant   ProductVariant @relation(fields: [productVariantId], references: [id])
+
+  productName String
+  variantName String?
+  sku         String?
 
   displayName String
 
@@ -443,8 +542,7 @@ model QuotationItem {
 
   remarks String?
 
-  quotation      Quotation      @relation(fields: [quotationId], references: [id])
-  productVariant ProductVariant @relation(fields: [productVariantId], references: [id])
+  quotation Quotation @relation(fields: [quotationId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -568,4 +666,76 @@ model Payment {
   @@index([followUpDate])
   @@index([paidAt])
   @@index([quotationId])
+}
+
+model ProposalRequest {
+  id String @id @default(cuid())
+
+  customerName  String
+  customerEmail String
+  customerPhone String?
+
+  companyName String?
+
+  status ProposalRequestStatus @default(PENDING)
+
+  notes       String?
+  quotationId String? @unique
+
+  quotation Quotation? @relation(fields: [quotationId], references: [id])
+
+  convertedAt DateTime?
+
+  items ProposalRequestItem[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ProposalRequestItem {
+  id String @id @default(cuid())
+
+  proposalRequestId String
+  proposalRequest   ProposalRequest @relation(fields: [proposalRequestId], references: [id], onDelete: Cascade)
+
+  productVariantId String
+  productVariant   ProductVariant @relation(fields: [productVariantId], references: [id])
+  productName      String
+  variantName      String?
+  sku              String?
+
+  quantity Int
+
+  createdAt DateTime @default(now())
+}
+
+model CompanySettings {
+  id String @id @default(cuid())
+
+  companyName String
+
+  address String
+
+  phone   String?
+  email   String?
+  website String?
+
+  gstNumber String?
+  panNumber String?
+
+  bankName      String?
+  accountName   String?
+  accountNumber String?
+  ifscCode      String?
+
+  upiId String?
+
+  quotationValidityDays Int @default(15)
+
+  termsAndConditions String?
+
+  logoUrl String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
