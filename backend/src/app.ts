@@ -20,8 +20,19 @@ import authRoutes from "./modules/auth/auth.routes"
 import catalogueRoutes from "./modules/catalogue/catalogue.routes"
 import proposalRequestRoutes from "./modules/proposal-request/proposal-request.routes"
 import companySettingsRoutes from "./modules/company-settings/company-settings.routes"
+import dashboardRoutes from "./modules/dashboard/dashboard.routes"
+import cors from "cors"
 
 const app = express();
+
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  })
+);
+
+app.use(express.json());
 
 app.use(express.json());
 
@@ -46,6 +57,7 @@ app.use("/auth", authRoutes);
 app.use("/catalogue", catalogueRoutes);
 app.use("/proposal-requests", proposalRequestRoutes);
 app.use("/company-settings", companySettingsRoutes);
+app.use("/dashboard", dashboardRoutes);
 
 app.use(errorMiddleware);
 
