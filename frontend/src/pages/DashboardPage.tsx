@@ -3,6 +3,7 @@ import DashboardStatCard from "@/features/dashboard/components/DashboardStatCard
 import { useDashboard } from "@/features/dashboard/useDashboard";
 import RevenueChart from "@/features/dashboard/components/RevenueChart";
 import RevenueSummary from "@/features/dashboard/components/RevenueSummary";
+import RecentQuotations from "@/features/dashboard/components/RecentQuotations";
 import {
   FileText,
   ClipboardList,
@@ -16,6 +17,7 @@ export default function DashboardPage() {
   console.log("LOADING:", isLoading);
 console.log("ERROR:", isError);
 console.log(error);
+console.log(JSON.stringify(data?.recentQuotations, null, 2));
   if (isLoading){
     return <div>Loading dashboard...</div>
   }
@@ -84,7 +86,10 @@ console.log(error);
 
   {/* Recent Quotations */}
   <div className="col-span-7">
-    Recent Quotations
+    <RecentQuotations 
+      quotations={
+        data?.recentQuotations ?? []
+      } />
   </div>
 
   {/* Recent Proposal Requests */}

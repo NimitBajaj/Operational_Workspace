@@ -6,7 +6,13 @@ export class DashboardService {
     ) {}
 
     async getDashboard() {
-    const counts = await this.repository.getCounts();
+    const [
+    counts,
+    recentQuotations,
+] = await Promise.all([
+    this.repository.getCounts(),
+    this.repository.getRecentQuotations(),
+]);
 
     const monthlyRevenue = [
         {
@@ -42,7 +48,7 @@ export class DashboardService {
             monthlyRevenue: 182400,
         },
 
-        recentQuotations: [],
+        recentQuotations,
 
         recentProposalRequests: [],
 

@@ -1,37 +1,33 @@
-interface PageHeaderProps {
-  title: string;
-  subtitle?: string;
-  actions?: React.ReactNode;
+interface Props {
+    title: string;
+    subtitle?: string;
+    action?: React.ReactNode;
 }
 
 export default function PageHeader({
-  title,
-  subtitle,
-  actions,
-}: PageHeaderProps) {
-  return (
-    <div className="mb-8 flex items-center justify-between">
+    title,
+    subtitle,
+    action,
+}: Props) {
+    return (
+        <div className="mb-8 flex items-center justify-between">
 
-      <div>
+            <div>
 
-        <h1 className="text-3xl font-bold text-slate-900">
-          {title}
-        </h1>
+                <h1 className="text-4xl font-bold text-slate-900">
+                    {title}
+                </h1>
 
-        {subtitle && (
-          <p className="mt-1 text-slate-500">
-            {subtitle}
-          </p>
-        )}
+                {subtitle && (
+                    <p className="mt-2 text-slate-500">
+                        {subtitle}
+                    </p>
+                )}
 
-      </div>
+            </div>
 
-      {actions && (
-        <div>
-          {actions}
+            {action}
+
         </div>
-      )}
-
-    </div>
-  );
+    );
 }

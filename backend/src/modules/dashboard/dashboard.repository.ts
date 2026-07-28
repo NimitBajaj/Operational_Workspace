@@ -25,4 +25,28 @@ export class DashboardRepository {
             quotations,
         };
     }
+
+    async getRecentQuotations() {
+    return this.prisma.quotation.findMany({
+        take: 5,
+
+        where: {
+            projectId: {
+                not: null,
+            },
+        },
+
+        orderBy: {
+            createdAt: "desc",
+        },
+
+        include: {
+            project: {
+                include: {
+                    customer: true,
+                },
+            },
+        },
+    });
+}
 }
