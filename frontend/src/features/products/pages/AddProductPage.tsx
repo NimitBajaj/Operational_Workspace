@@ -1,10 +1,28 @@
 import PageHeader from "@/components/common/PageHeader";
-import SectionCard from "@/components/common/SectionCard";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod"
+import ProductForm from "../components/ProductForm";
+import { productSchema, type ProductFormValues } from "../components/schemas/product.schema";
+import { type ProductFormInput } from "../components/schemas/product.schema";
 
-import Button from "@/components/ui/Button";
-import Input from "@/components/ui/Input";
 
 export default function AddProductPage() {
+  const form = useForm<ProductFormInput, any, ProductFormValues>({
+  resolver: zodResolver(productSchema),
+  defaultValues: {
+    name: "",
+    description: "",
+    categoryId: "",
+    basePrice: 0,
+    gst: 18,
+    discount: 0,
+  },
+});
+
+function onSubmit(data: ProductFormValues) {
+  console.log(data);
+}
+
   return (
     <>
 
@@ -13,69 +31,11 @@ export default function AddProductPage() {
         subtitle="Create a new catalogue product."
       />
 
-      <div className="space-y-8">
-
-        <SectionCard title="Basic Information">
-
-          <div className="grid md:grid-cols-2 gap-6">
-
-            <Input
-              label="Product Name"
-              placeholder="LED Panel Light"
-            />
-
-            <Input
-              label="Category"
-              placeholder="Lighting"
-            />
-
-          </div>
-
-          <div className="mt-6">
-
-            <Input
-              label="Description"
-              placeholder="Enter description..."
-            />
-
-          </div>
-
-        </SectionCard>
-
-        <SectionCard title="Pricing">
-
-          <div className="grid md:grid-cols-3 gap-6">
-
-            <Input
-              label="Base Price"
-            />
-
-            <Input
-              label="GST %"
-            />
-
-            <Input
-              label="Discount"
-            />
-
-          </div>
-
-        </SectionCard>
-
-        <div className="flex justify-end gap-4">
-
-          <Button variant="secondary">
-            Cancel
-          </Button>
-
-          <Button>
-            Save Product
-          </Button>
-
-        </div>
-
-      </div>
-
-    </>
+      <ProductForm
+        form={form}
+        onSubmit={onSubmit}
+        submitText="Save Product"
+    />
+</>
   );
 }

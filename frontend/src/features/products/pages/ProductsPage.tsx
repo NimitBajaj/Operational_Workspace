@@ -7,6 +7,8 @@ import Button from "@/components/ui/Button";
 
 import { useNavigate } from "react-router-dom";
 import { useProducts } from "../hooks/useProducts";
+import { useState } from "react";
+import { fi, id } from "zod/v4/locales";
 
 export default function ProductsPage() {
 
@@ -15,7 +17,16 @@ export default function ProductsPage() {
     isLoading,
   } = useProducts();
 
+  const [search, setSearch] = useState("");
+
   const navigate = useNavigate();
+
+  const filteredProducts =
+    data?.filter((product) =>
+        product.name
+            .toLowerCase()
+            .includes(search.toLowerCase())
+    ) ?? [];
 
   if (isLoading) {
     return <LoadingSkeleton />;
@@ -48,11 +59,24 @@ export default function ProductsPage() {
 
         <div className="space-y-6">
 
-    <ProductFilters />
+    <ProductFilters 
+        search={search}
+        setSearch={setSearch}
+        />
+
+<div className="flex justify-between items-center">
+
+    <h2 className="text-lg font-semibold">
+
+        {filteredProducts.length} Products
+
+    </h2>
+
+</div>
 
     <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
 
-        {data?.map((product) => (
+        {filteredProducts.map((product) => (
 
             <ProductCard
                 key={product.id}

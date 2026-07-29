@@ -14,4 +14,5 @@ export const productSchema = z.object({
   discount: z.coerce.number().min(0),
 });
 
-export type ProductFormValues = z.infer<typeof productSchema>;
+export type ProductFormValues = z.output<typeof productSchema>;
+export type ProductFormInput = z.input<typeof productSchema>;

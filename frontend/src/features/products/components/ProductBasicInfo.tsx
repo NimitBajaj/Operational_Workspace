@@ -1,10 +1,14 @@
 import Input from "@/components/ui/Input";
 import { type UseFormReturn } from "react-hook-form";
 
-import { type ProductFormValues } from "./schemas/product.schema";
+import { type ProductFormValues, type ProductFormInput } from "./schemas/product.schema";
 
 interface Props {
-  form: UseFormReturn<ProductFormValues>;
+  form: UseFormReturn<
+    ProductFormInput,
+    any,
+    ProductFormValues
+  >;
 }
 
 export default function ProductBasicInfo({

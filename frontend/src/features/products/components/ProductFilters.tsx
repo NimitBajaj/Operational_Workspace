@@ -1,13 +1,21 @@
 import SearchInput from "@/components/common/SearchInput";
 
-export default function ProductFilters() {
+interface Props {
+    search: string;
+    setSearch: (value: string) => void;
+}
+
+export default function ProductFilters({
+    search,
+    setSearch,
+}: Props) {
     return (
         <div className="flex gap-4">
 
             <div className="flex-1">
                 <SearchInput
-                    value=""
-                    onChange={() => {}}
+                    value={search}
+                    onChange={setSearch}
                     placeholder="Search by product name..."
                 />
             </div>

@@ -1,81 +1,94 @@
 import { Card } from "@/components/ui/Card";
 import Button from "@/components/ui/Button";
 import StatusBadge from "@/components/common/StatusBadge";
+import type { Product } from "../types/product";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
-    product: any;
+  product: Product;
 }
 
+
+
 export default function ProductCard({
-    product,
+  product,
 }: Props) {
-    return (
-        <Card className="overflow-hidden hover:-translate-y-1 transition-all duration-300">
+  const navigate = useNavigate();
+  return (
+    <Card 
+    onClick={() => navigate(`/products/${product.id}`)}
+    className="overflow-hidden hover:-translate-y-1 transition-all duration-300">
 
-            <div className="aspect-square bg-slate-100 flex items-center justify-center">
+      <div className="aspect-square bg-slate-100 flex items-center justify-center">
 
-                {product.imageUrl ? (
+        <span className="text-slate-400 text-sm">
+          No Image
+        </span>
 
-                    <img
-                        src={product.imageUrl}
-                        className="h-full w-full object-cover"
-                    />
+      </div>
 
-                ) : (
+      <div className="p-5">
 
-                    <span className="text-slate-400">
-                        No Image
-                    </span>
+        <div className="flex justify-between items-start">
 
-                )}
-
-            </div>
-
-            <div className="p-5">
-
-    <div className="flex justify-between">
-
-        <div>
+          <div>
 
             <h3 className="font-semibold text-lg">
-                {product.name}
+              {product.name}
             </h3>
 
             <p className="text-slate-500 mt-1">
-                {product.category?.name ?? "No Category"}
+              {product.category.name}
             </p>
+
+          </div>
+
+          <StatusBadge
+            status={product.active ? "Active" : "Inactive"}
+          />
 
         </div>
 
-        <StatusBadge
-            status="Active"
-        />
+        <p className="mt-4 text-sm text-slate-600 line-clamp-2">
+          {product.shortDescription}
+        </p>
 
-    </div>
+        <div className="mt-6 flex justify-between items-center">
 
-    <div className="mt-6 flex justify-between items-end">
+          <div className="space-y-1">
 
-        <div>
-
-            <p className="text-slate-400 text-sm">
-                Starting From
+            <p className="text-sm text-slate-500">
+              Warranty
             </p>
 
-            <h2 className="text-2xl font-bold text-blue-600">
-                ₹{Number(product.basePrice).toLocaleString()}
-            </h2>
+            <p className="font-medium">
+              {product.warranty ?? "N/A"}
+            </p>
+
+          </div>
+
+          <div className="flex items-center gap-2">
+
+            {product.featured && (
+              <span className="rounded-full bg-yellow-100 px-3 py-1 text-xs font-medium text-yellow-700">
+                Featured
+              </span>
+            )}
+
+            <Button 
+                variant="secondary"
+                onClick={(e) => {
+                  e.stopPropagation();
+                }}>
+              Edit
+            </Button>
+
+          </div>
 
         </div>
 
-        <Button
-            variant="secondary"
-        >
-            Edit
-        </Button>
+      </div>
 
-    </div>
-
-</div>
-        </Card>
-    );
+    </Card>
+  );
 }

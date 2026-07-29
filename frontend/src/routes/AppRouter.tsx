@@ -9,6 +9,8 @@ import AppLayout from "@/layouts/AppLayout";
 import DashboardPage from "@/pages/DashboardPage";
 import ProductsPage from "@/features/products/pages/ProductsPage";
 import AddProductPage from "@/features/products/pages/AddProductPage";
+import ProductDetailsPage from "@/features/products/pages/ProductDetailsPage";
+import EditProductPage from "@/features/products/pages/EditProductsPage";
 
 function Placeholder({ title }: { title: string }) {
   return (
@@ -33,10 +35,20 @@ export default function AppRouter() {
           />
 
           <Route
+    path="/products/:id"
+    element={<ProductDetailsPage />}
+/>
+
+          <Route
             path= "/products/new"
             element= {<AddProductPage />}
           />
-          
+
+          <Route
+    path="/products/:id/edit"
+    element={<EditProductPage />}
+/>
+
           <Route
             path="/projects"
             element={<Placeholder title="Projects" />}
