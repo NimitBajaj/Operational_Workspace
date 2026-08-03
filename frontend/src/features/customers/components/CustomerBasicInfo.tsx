@@ -7,6 +7,9 @@ import type {
   CustomerFormValues,
 } from "./schemas/customer.schema";
 
+import { CUSTOMER_TYPES } from "@shared/enums/customer";
+import Select from "@/components/ui/Select";
+
 interface Props {
   form: UseFormReturn<
     CustomerFormInput,
@@ -39,11 +42,14 @@ export default function CustomerBasicInfo({
         {...form.register("phone")}
       />
 
-      <Input
-        label="Customer Type"
-        placeholder="ARCHITECT / BUILDER / CONTRACTOR"
-        {...form.register("type")}
-      />
+<Select
+  label="Customer Type"
+  options={CUSTOMER_TYPES.map(type => ({
+    value: type,
+    label: type,
+  }))}
+  {...form.register("type")}
+/>
 
       <Input
         label="GST Number"

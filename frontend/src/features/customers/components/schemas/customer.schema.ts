@@ -1,4 +1,5 @@
 import { z } from "zod";
+import {CUSTOMER_TYPES} from "@shared/enums/customer";
 
 export const customerSchema = z.object({
   name: z.string().min(2, "Customer name is required"),
@@ -7,11 +8,7 @@ export const customerSchema = z.object({
 
   phone: z.string().min(10, "Phone number is required"),
 
-  type: z.enum([
-    "ARCHITECT",
-    "BUILDER",
-    "CONTRACTOR",
-  ]),
+  type: z.enum(CUSTOMER_TYPES),
 
   gstNumber: z.string().optional(),
 
