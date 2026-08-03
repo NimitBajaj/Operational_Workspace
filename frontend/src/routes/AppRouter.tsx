@@ -14,6 +14,8 @@ import EditProductPage from "@/features/products/pages/EditProductsPage";
 import CustomersPage from "@/features/customers/pages/CustomersPage";
 import CustomerDetailsPage from "@/features/customers/pages/CustomerDetailsPage";
 import AddCustomerPage from "@/features/customers/pages/AddCustomerPage";
+import AddProjectPage from "@/features/projects/pages/AddProjectPage";
+import ProjectsPage from "@/features/projects/pages/ProjectsPage";
 
 function Placeholder({ title }: { title: string }) {
   return (
@@ -52,10 +54,15 @@ export default function AppRouter() {
     element={<EditProductPage />}
 />
 
-          <Route
-            path="/projects"
-            element={<Placeholder title="Projects" />}
-          />
+    <Route
+  path="/projects"
+  element={<ProjectsPage />}
+/>
+
+<Route
+    path="/projects/add"
+    element={<AddProjectPage />}
+/>
 
           <Route 
           path="/customers"

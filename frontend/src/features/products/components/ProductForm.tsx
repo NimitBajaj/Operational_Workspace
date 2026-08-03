@@ -5,6 +5,7 @@ import ProductBasicInfo from "./ProductBasicInfo";
 
 import type { UseFormReturn } from "react-hook-form";
 import type { ProductFormInput, ProductFormValues } from "./schemas/product.schema";
+import Textarea from "@/components/ui/Textarea";
 
 interface Props {
     form: UseFormReturn<
@@ -38,9 +39,10 @@ export default function ProductForm({
 
                     <div className="mt-6">
 
-                        <Input
+                        <Textarea
                             label="Description"
                             placeholder="Enter description..."
+                            {...form.register("description")}
                         />
 
                     </div>

@@ -11,6 +11,8 @@ import type {
   CustomerFormInput,
   CustomerFormValues,
 } from "./schemas/customer.schema";
+import Textarea from "@/components/ui/Textarea";
+import FormField from "@/components/common/FormField";
 
 interface Props {
   form: UseFormReturn<
@@ -56,10 +58,16 @@ export default function CustomerForm({
               {...form.register("address")}
             />
 
-            <Input
-              label="City"
-              {...form.register("city")}
-            />
+          <FormField
+    label="City"
+    error={form.formState.errors.city?.message}
+>
+
+    <Input
+        {...form.register("city")}
+    />
+
+</FormField>
 
             <Input
               label="State"
@@ -77,7 +85,7 @@ export default function CustomerForm({
 
         <SectionCard title="Notes">
 
-          <Input
+          <Textarea
             label="Notes"
             placeholder="Additional information..."
             {...form.register("notes")}
