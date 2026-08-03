@@ -5,11 +5,23 @@ import SectionCard from "@/components/common/SectionCard";
 import { useProduct } from "../hooks/useProduct";
 import { useNavigate } from "react-router-dom";
 import Button from "@/components/ui/Button";
+import { useDeleteProduct } from "../hooks/useDeleteProduct";
 
 export default function ProductDetailsPage() {
   const { id } = useParams();
 const {data: product, isLoading} = useProduct(id!);
 const navigate = useNavigate();
+const deleteMutation = useDeleteProduct();
+
+function handleDelete() {
+  if(!confirm("Delete this product?")) return;
+
+  deleteMutation.mutate(product.id, {
+    onSuccess: () => {
+      navigate("/products");
+    },
+  });
+}
 
 if (isLoading) {
   return <div>Loading...</div>;
@@ -30,6 +42,13 @@ if (!product) {
     onClick={() => navigate(`/products/${product.id}/edit`)}
 >
     Edit Product
+</Button>
+
+<Button
+  variant="danger"
+  onClick={handleDelete}
+>
+  Delete
 </Button>
 
       <div className="space-y-8">

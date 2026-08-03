@@ -11,6 +11,9 @@ import ProductsPage from "@/features/products/pages/ProductsPage";
 import AddProductPage from "@/features/products/pages/AddProductPage";
 import ProductDetailsPage from "@/features/products/pages/ProductDetailsPage";
 import EditProductPage from "@/features/products/pages/EditProductsPage";
+import CustomersPage from "@/features/customers/pages/CustomersPage";
+import CustomerDetailsPage from "@/features/customers/pages/CustomerDetailsPage";
+import AddCustomerPage from "@/features/customers/pages/AddCustomerPage";
 
 function Placeholder({ title }: { title: string }) {
   return (
@@ -54,10 +57,20 @@ export default function AppRouter() {
             element={<Placeholder title="Projects" />}
           />
 
-          <Route
-            path="/customers"
-            element={<Placeholder title="Customers" />}
+          <Route 
+          path="/customers"
+          element={<CustomersPage />}
           />
+
+          <Route
+            path="/customers/:id"
+            element={<CustomerDetailsPage />}
+            />
+
+          <Route 
+            path="/customers/add"
+            element={<AddCustomerPage />}
+            />
 
           <Route
             path="/proposal-requests"
