@@ -3,9 +3,14 @@
     "target": "ES2022",
     "module": "CommonJS",
     "moduleResolution": "Node",
+
     "rootDir": "./src",
     "outDir": "./dist",
-
+    
+    "baseUrl": ".",
+    "paths": {
+      "@shared/*": ["../shared/*"]
+    },
     "strict": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
